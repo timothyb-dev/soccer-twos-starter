@@ -1,3 +1,6 @@
+# added by Tim
+.DS_Store
+
 envs/
 ray_results/
 ceia_baseline_agent/
