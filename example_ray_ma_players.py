@@ -21,7 +21,9 @@ if __name__ == "__main__":
         act_space = temp_env.action_space
         temp_env.close()
     elif training_type == "VELOCITY_TOWARDS_BALL_REWARD":
-        tune.registry.register_env("Soccer", create_rllib_env)
+        tune.registry.register_env(
+            "Soccer", create_rllib_env_with_velocity_towards_ball_reward
+        )
         temp_env = create_rllib_env({"variation": EnvType.multiagent_player})
         obs_space = temp_env.observation_space
         act_space = temp_env.action_space
@@ -42,8 +44,8 @@ if __name__ == "__main__":
                 "policies": {
                     "default": (None, obs_space, act_space, {}),
                 },
-                "policy_mapping_fn": tune.function(lambda _: "default"),  # use for PACE
-                # "policy_mapping_fn": lambda agent_id, *args, **kwargs: "default",  # for macOS
+                # "policy_mapping_fn": tune.function(lambda _: "default"),  # use for PACE
+                "policy_mapping_fn": lambda agent_id, *args, **kwargs: "default",  # for macOS
                 "policies_to_train": ["default"],
             },
             "env": "Soccer",
@@ -53,8 +55,8 @@ if __name__ == "__main__":
             },
         },
         stop={
-            # "timesteps_total": 200,  # small test run
-            "timesteps_total": 15000000,  # 15M
+            "timesteps_total": 200,  # small test run for macOS
+            # "timesteps_total": 15000000,  # 15M
             # "time_total_s": 14400, # 4h
         },
         checkpoint_freq=100,
