@@ -2,7 +2,7 @@ import ray
 from ray import tune
 from soccer_twos import EnvType
 
-from utils import create_rllib_env
+from utils import create_rllib_env, create_rllib_env_with_velocity_towards_ball_reward
 
 
 NUM_ENVS_PER_WORKER = 3
@@ -11,19 +11,29 @@ NUM_ENVS_PER_WORKER = 3
 if __name__ == "__main__":
     ray.init()
 
-    tune.registry.register_env("Soccer", create_rllib_env)
-    temp_env = create_rllib_env({"variation": EnvType.multiagent_player})
-    obs_space = temp_env.observation_space
-    act_space = temp_env.action_space
-    temp_env.close()
+    # TODO: select either baseline or modified reward
+    training_type = "VELOCITY_TOWARDS_BALL_REWARD"  # "VELOCITY_TOWARDS_BALL_REWARD"
+    print(f"WE ARE TRAINING: {training_type}")
+    if training_type == "BASELINE":
+        tune.registry.register_env("Soccer", create_rllib_env)
+        temp_env = create_rllib_env({"variation": EnvType.multiagent_player})
+        obs_space = temp_env.observation_space
+        act_space = temp_env.action_space
+        temp_env.close()
+    elif training_type == "VELOCITY_TOWARDS_BALL_REWARD":
+        tune.registry.register_env("Soccer", create_rllib_env)
+        temp_env = create_rllib_env({"variation": EnvType.multiagent_player})
+        obs_space = temp_env.observation_space
+        act_space = temp_env.action_space
+        temp_env.close()
 
     analysis = tune.run(
         "PPO",
         name="PPO_selfplay_1",
         config={
             # system settings
-            "num_gpus": 1,
-            "num_workers": 6,
+            "num_gpus": 0,
+            "num_workers": 1,
             "num_envs_per_worker": NUM_ENVS_PER_WORKER,
             "log_level": "INFO",
             "framework": "torch",
@@ -32,7 +42,8 @@ if __name__ == "__main__":
                 "policies": {
                     "default": (None, obs_space, act_space, {}),
                 },
-                "policy_mapping_fn": tune.function(lambda _: "default"),
+                "policy_mapping_fn": tune.function(lambda _: "default"),  # use for PACE
+                # "policy_mapping_fn": lambda agent_id, *args, **kwargs: "default",  # for macOS
                 "policies_to_train": ["default"],
             },
             "env": "Soccer",
@@ -42,6 +53,7 @@ if __name__ == "__main__":
             },
         },
         stop={
+            # "timesteps_total": 200,  # small test run
             "timesteps_total": 15000000,  # 15M
             # "time_total_s": 14400, # 4h
         },
