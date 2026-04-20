@@ -24,6 +24,34 @@ VELOCITY_SCALE = 1 / 40.0  # adjust this if you get a better estimate of max vel
 ########################################################################################
 # NOTE: create a environment class that rewards a player for moving towards ball
 ########################################################################################
+
+class BallVelocityandPositionRewardWrapper(gym.core.Wrapper, MultiAgentEnv) :
+    def __init__(self, env):
+        super(BallVelocityandPositionRewardWrapper, self).__init__(env)
+
+    def step(self, action) :
+        obs, reward, done, info = self.env.step(action)
+        # print(info[0])
+        if len(reward) == 2: 
+            reward[0] += info[0][0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
+            reward[1] += info[0][0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to left
+            reward[0] += 0.00001 * (1/np.linalg.norm(info[0][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
+            reward[0] += 0.00001 * (1/np.linalg.norm(info[0][1]['player_info']['position'] - info[0][1]['ball_info']['position']) + 0.001)
+            reward[1] += 0.00001 * (1/np.linalg.norm(info[1][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
+            reward[1] += 0.00001 * (1/np.linalg.norm(info[1][1]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
+        elif len(reward) ==4 :
+            reward[0] += info[0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
+            reward[1] += info[0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
+            reward[2] += info[0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to lert
+            reward[3] += info[0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to left
+            reward[0] += 0.00001 * (1/np.linalg.norm(info[0]['player_info']['position'] - info[0]['ball_info']['position']) + 0.001)
+            reward[1] += 0.00001 * (1/np.linalg.norm(info[1]['player_info']['position'] - info[1]['ball_info']['position']) + 0.001)
+            reward[2] += 0.00001 * (1/np.linalg.norm(info[2]['player_info']['position'] - info[2]['ball_info']['position']) + 0.001)
+            reward[3] += 0.00001 * (1/np.linalg.norm(info[3]['player_info']['position'] - info[3]['ball_info']['position']) + 0.001)
+        else :
+            raise ValueError("Expected the reward to be either of length two or four!")
+        return obs, reward, done, info
+
 class VelocityTowardsBallRewardWrapper(gym.core.Wrapper, MultiAgentEnv):
     def __init__(self, env):
         super(VelocityTowardsBallRewardWrapper, self).__init__(env)
@@ -114,7 +142,26 @@ def create_rllib_env_with_velocity_towards_ball_reward(env_config: dict = {}):
         return env
     return VelocityTowardsBallRewardWrapper(env)
 
-
+def create_rllib_env_with_ball_velocity(env_config: dict = {}):
+    """
+    Creates a RLLib environment and prepares it to be instantiated by Ray workers.
+    Args:
+        env_config: configuration for the environment.
+            You may specify the following keys:
+            - variation: one of soccer_twos.EnvType. Defaults to EnvType.multiagent_player.
+            - opponent_policy: a Callable for your agent to train against. Defaults to a random policy.
+    """
+    if hasattr(env_config, "worker_index"):
+        env_config["worker_id"] = (
+            env_config.worker_index * env_config.get("num_envs_per_worker", 1)
+            + env_config.vector_index
+        )
+    env = soccer_twos.make(**env_config)
+    # env = TransitionRecorderWrapper(env)
+    if "multiagent" in env_config and not env_config["multiagent"]:
+        # is multiagent by default, is only disabled if explicitly set to False
+        return env
+    return BallVelocityandPositionRewardWrapper(env)
 ########################################################################################
 # original code
 ########################################################################################
