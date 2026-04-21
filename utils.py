@@ -35,19 +35,27 @@ class BallVelocityandPositionRewardWrapper(gym.core.Wrapper, MultiAgentEnv) :
         if len(reward) == 2: 
             reward[0] += info[0][0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
             reward[1] += info[0][0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to left
-            reward[0] += 0.00001 * (1/np.linalg.norm(info[0][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
-            reward[0] += 0.00001 * (1/np.linalg.norm(info[0][1]['player_info']['position'] - info[0][1]['ball_info']['position']) + 0.001)
-            reward[1] += 0.00001 * (1/np.linalg.norm(info[1][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
-            reward[1] += 0.00001 * (1/np.linalg.norm(info[1][1]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.001)
+            reward[0] += 0.00001 * 1/(np.linalg.norm(info[0][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.01)
+            reward[0] += 0.00001 * 1/(np.linalg.norm(info[0][1]['player_info']['position'] - info[0][1]['ball_info']['position']) + 0.01)
+            reward[1] += 0.00001 * 1/(np.linalg.norm(info[1][0]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.01)
+            reward[1] += 0.00001 * 1/(np.linalg.norm(info[1][1]['player_info']['position'] - info[0][0]['ball_info']['position']) + 0.01)
         elif len(reward) ==4 :
             reward[0] += info[0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
             reward[1] += info[0]['ball_info']['velocity'][0] * 0.0001 # ball velocity to right
             reward[2] += info[0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to lert
             reward[3] += info[0]['ball_info']['velocity'][0] * -0.0001 # ball velocity to left
-            reward[0] += 0.00001 * (1/np.linalg.norm(info[0]['player_info']['position'] - info[0]['ball_info']['position']) + 0.001)
-            reward[1] += 0.00001 * (1/np.linalg.norm(info[1]['player_info']['position'] - info[1]['ball_info']['position']) + 0.001)
-            reward[2] += 0.00001 * (1/np.linalg.norm(info[2]['player_info']['position'] - info[2]['ball_info']['position']) + 0.001)
-            reward[3] += 0.00001 * (1/np.linalg.norm(info[3]['player_info']['position'] - info[3]['ball_info']['position']) + 0.001)
+            reward[0] += 0.00001 * 1/(np.linalg.norm(info[0]['player_info']['position'] - info[0]['ball_info']['position']) + 0.01)
+            reward[1] += 0.00001 * 1/(np.linalg.norm(info[1]['player_info']['position'] - info[1]['ball_info']['position']) + 0.01)
+            reward[2] += 0.00001 * 1/(np.linalg.norm(info[2]['player_info']['position'] - info[2]['ball_info']['position']) + 0.01)
+            reward[3] += 0.00001 * 1/(np.linalg.norm(info[3]['player_info']['position'] - info[3]['ball_info']['position']) + 0.01)
+            if np.linalg.norm(info[0]['player_info']['velocity']) == 0 :
+                reward[0] -= 0.01
+            if np.linalg.norm(info[1]['player_info']['velocity']) == 0 :
+                reward[1] -= 0.01
+            if np.linalg.norm(info[2]['player_info']['velocity']) == 0 :
+                reward[2] -= 0.01
+            if np.linalg.norm(info[3]['player_info']['velocity']) == 0 :
+                reward[3] -= 0.01
         else :
             raise ValueError("Expected the reward to be either of length two or four!")
         return obs, reward, done, info
