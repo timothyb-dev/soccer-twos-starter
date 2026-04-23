@@ -1,0 +1,61 @@
+Progress: |██████████████████████████████████████████████████| 200 / 200 episodes completed
+episode_len_mean: 62.52
+episode_reward_max: -0.014799952507019043
+episode_reward_mean: -0.124611996114254
+episode_reward_min: -0.6247999668121338
+episodes_this_eval: 200
+policies:
+  TEAM14_AGENT:
+    blue_team:
+      policy_blue_team_draws: 0
+      policy_blue_team_losses: 43
+      policy_blue_team_reward_max: 1.979200005531311
+      policy_blue_team_reward_mean: 0.21267201006412506
+      policy_blue_team_reward_min: -2.0
+      policy_blue_team_total_games: 100
+      policy_blue_team_win_rate: 0.57
+      policy_blue_team_wins: 57
+    orange_team:
+      policy_orange_team_draws: 0
+      policy_orange_team_losses: 39
+      policy_orange_team_reward_max: 1.981600046157837
+      policy_orange_team_reward_mean: 0.35078802704811096
+      policy_orange_team_reward_min: -2.0
+      policy_orange_team_total_games: 100
+      policy_orange_team_win_rate: 0.61
+      policy_orange_team_wins: 61
+    policy_draws: 0
+    policy_losses: 82
+    policy_reward_max: 1.981600046157837
+    policy_reward_mean: 0.2817299962043762
+    policy_reward_min: -2.0
+    policy_total_games: 200
+    policy_win_rate: 0.59
+    policy_wins: 118
+  ceia_baseline_agent:
+    blue_team:
+      policy_blue_team_draws: 0
+      policy_blue_team_losses: 61
+      policy_blue_team_reward_max: 1.985200047492981
+      policy_blue_team_reward_mean: -0.4801599979400635
+      policy_blue_team_reward_min: -2.0
+      policy_blue_team_total_games: 100
+      policy_blue_team_win_rate: 0.39
+      policy_blue_team_wins: 39
+    orange_team:
+      policy_orange_team_draws: 0
+      policy_orange_team_losses: 57
+      policy_orange_team_reward_max: 1.9775999784469604
+      policy_orange_team_reward_mean: -0.33252403140068054
+      policy_orange_team_reward_min: -2.0
+      policy_orange_team_total_games: 100
+      policy_orange_team_win_rate: 0.43
+      policy_orange_team_wins: 43
+    policy_draws: 0
+    policy_losses: 118
+    policy_reward_max: 1.985200047492981
+    policy_reward_mean: -0.4063419699668884
+    policy_reward_min: -2.0
+    policy_total_games: 200
+    policy_win_rate: 0.41
+    policy_wins: 82
