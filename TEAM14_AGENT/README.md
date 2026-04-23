@@ -1,12 +1,12 @@
 # Team 14 Agent
 
-**Agent name:** Team14_MultiagentSelfPlay
+**Agent name:** Team14_MultiagentSelfPlay_with_Reward_Modification
 
-**Author (s):** Joseph Schwalbe (jschwalbe3@gatech.edu), Divyam Kumar (dkumar75@gatech.edu) and Timothy Bernard (tbernard8@gatech.edu)
+**Author (s):** Joseph Schwalbe jschwalbe3@gatech.edu and Divyam Kumar (dkumar75@gatech.edu) and Timothy Bernard (tbernard8@gatech.edu)
 
 ## Description
 
-An agent trained with PPO via multi-agent self-play using Ray RLLib. This version does...
+An agent trained with PPO via multi-agent self-play using Ray RLLib.
 
 Reward modification: This agent has a modified reward function. Here, the agent gets -1 for each goal allowed, +1 - (1/MaxSteps) for each goal scored. This part of the reward is from the environment. In addition to this, our agent gets two other awards. Firstly, the agent gets an award for being close to the ball. This equation is as follows
 reward += RewardScalar / (||player_position - ball_position|| + offset).

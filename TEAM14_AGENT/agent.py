@@ -17,6 +17,7 @@ CHECKPOINT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "./ray_results/PPO_selfplay_1/PPO_Soccer_2e8e2_00000_0_2026-04-21_11-10-07/checkpoint_001500/checkpoint-1500",
 )
+
 # TODO: replace the above path with the checkpoint you want from the ray_results you have
 
 
