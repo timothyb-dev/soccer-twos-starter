@@ -2,7 +2,7 @@
 
 **Agent name:** Team14_MultiagentSelfPlay
 
-**Author (s):** Joseph Schwalbe jschwalbe3@gatech.edu and Divyam Kumar (email) and Timothy Bernard (email)
+**Author (s):** Joseph Schwalbe (jschwalbe3@gatech.edu), Divyam Kumar (dkumar75@gatche.edu) and Timothy Bernard (tbernard8@gatech.edu)
 
 ## Description
 
